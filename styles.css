@@ -21,6 +21,7 @@ body {
     font-size: 24px;
     text-align: right;
     font-family: 'Cutive Mono';
+    height: 27px;
 }
 
 #buttons {
@@ -46,7 +47,8 @@ button {
     flex-shrink: 2;
 }
 
-.operator {
+.operator,
+#equals {
     font-size: 36px;
     background-color: #D3B443;
 }
