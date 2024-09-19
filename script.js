@@ -8,62 +8,85 @@ const num_btns = document.querySelectorAll(`.number`);
 const clear = document.querySelector(`#c`);
 const op_btns = document.querySelectorAll(`.operator`);
 const equals = document.querySelector(`#equals`);
+const btns = document.querySelectorAll("button");
 
-display.textContent = 0;
-
-function evaluate (num1,num2,operator) {
-    console.log(num1, operator, num2);
-    switch (operator) {
-        case "+":
-            return num1 + num2;
-            break;
-        case "-":
-            return num1 - num2;
-            break;
-        case "*":
-            return num1 * num2;
-            break;
-        case "/":
-            return num1 / num2; 
-}
-}
-
-function get_op_id(op_btn) {
-    let op_id = op_btn.getAttribute("id");
-    //gets id for operators displayed using alt code
-    if (op_id !== null) {
-        operator = op_id;
+function show(value) {
+    value = String(value);
+    if (value.length > 16) {
+        display.textContent = value.slice(0,16);
     }
     else {
-        operator = op_btn.textContent;
+        display.textContent = value;
     }
-    return operator;
+}
+
+show(0);
+
+function evaluate (num1,num2,operator) {
+    if (num2 == 0 && operator == "/") {
+        display_value = null;
+        operator = null;
+        num2 = null;
+        num1 = null;
+        return "Nope, try again";
+    }
+    else {
+        switch (operator) {
+            case "+":
+                return num1 + num2;
+                break;
+            case "-":
+                return num1 - num2;
+                break;
+            case "*":
+                return num1 * num2;
+                break;
+            case "/":
+                return num1 / num2; 
+        }
+    }
 }
 
 num_btns.forEach((num_btn) => {
     // adds a 'click' listener for each number button and displays it
     num_btn.addEventListener("click", () => {
-        if (display_value === null) {
-            display_value = num_btn.textContent;
-        }
-        else {
-            if (display_value === null && num_btn.textContent === `.`) {
-                display_value = '0' + num_btn.textContent;
+        let number = num_btn.textContent;
+            if (number === `.`) {
+                if (display_value === null) {
+                    display_value = '0' + number;
+                }
+                else if (display_value.includes(`.`) === false) {
+                    display_value = display_value + number;
+                }   
+            }
+            else if (display_value === null) {
+                display_value = number;
             }
             else {
-                display_value = display_value + num_btn.textContent;
+            display_value = display_value + number;
             }
-        }
-        display.textContent = display_value;
+        show(display_value);
     });
   });
+
+btns.forEach((btn) => {
+    btn.addEventListener("mousedown", () => {
+        btn.classList.toggle("pressed");
+    });
+    btn.addEventListener("mouseup", () => {
+        btn.classList.toggle("pressed");
+    });
+    btn.addEventListener("mouseleave", () => {
+        btn.classList.remove("pressed");
+    })
+});
 
 clear.addEventListener("click", () => {
     num1 = null;
     num2 = null;
     operator = null;
     display_value = null;
-    display.textContent = 0;
+    show(0);
 });
 
 op_btns.forEach((op_btn) => {
@@ -74,20 +97,22 @@ op_btns.forEach((op_btn) => {
             num1 = Number(display_value);
             display_value = null;
         }
-        //if operator is null, add op id to operater
-        if (operator === null){
-            operator = get_op_id(op_btn);
-            display_value = null;
-        }
+        //update operater
+        operator = op_btn.getAttribute("id");
         //if operator is not null, run calculation using display_value as num2.
-        if (display_value !== null){
+        if (display_value !== null && isNaN(num1) === false){
             num2 = Number(display_value);
             //run with previously entered operator then update operator to new button that was pressed
             display_value = evaluate(num1, num2, operator);
-            get_op_id(op_btn);
-            display.textContent = display_value;
+            operator = op_btn.getAttribute("id");
+            show(display_value);
             num2 = null;
-            num1 = display_value;
+            if (isNaN(display_value) === true) {
+                display_value = null;
+            }
+            else {
+                num1 = display_value;
+            }
         }
         display_value = null;
     });
@@ -95,10 +120,10 @@ op_btns.forEach((op_btn) => {
 
 //runs evaluate function and clears temporary display value
 equals.addEventListener("click", () => {
-    if (operator !== null){
+    if (operator !== null && isNaN(num1) === false && isNaN(num2) === false && display_value !== null){
         num2 = Number(display_value);
         display_value = evaluate(num1, num2, operator);
-        display.textContent = display_value;
+        show(display_value);
         num1 = Number(display_value);
         num2 = null;
         display_value = null;

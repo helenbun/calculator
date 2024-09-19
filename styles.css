@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap');
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-   /* font: 'Anonymous Pro', Arial, sans-serif;*/;
 }
 
 #calculator {
@@ -20,24 +23,34 @@ body {
     padding: 12px 16px;
     font-size: 24px;
     text-align: right;
-    font-family: 'Cutive Mono';
-    height: 27px;
+    font-family: 'Cutive Mono', monospace;
+    height: 50px;
 }
 
 #buttons {
     margin: 20px;
     height: 289px;
     display: flex;
-    flex-wrap: wrap;
     gap: 5px;
+}
+
+#left,
+#right {
+    gap: 5px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#right {
+    flex-direction: column;
 }
 
 button {
     flex: 1;
-    height: 55px;
+    height: 54px;
     min-width: 60px;
     font-size: 24px;
-    font-family: 'Cutive Mono';
+    font-family: 'Cutive Mono', monospace;
     border: 1px solid;
     border-radius: 3px;
 }
@@ -53,14 +66,39 @@ button {
     background-color: #D3B443;
 }
 
+.operator.pressed,
+#equals.pressed {
+    background-color: #A58C2F;
+}
+
+#equals {
+    flex-grow: 2;
+}
+
+#right > .operator {
+    max-height: 54px;
+}
+
 .number {
     background-color: #DD738E;
+}
+
+.number.pressed {
+    background-color: #B5536B;
 }
 
 .top {
     background-color: #5CA9D0;
 }
 
+.top.pressed {
+    background-color: #418AAE;
+}
+
 .bottom {
     background-color: #DA8544;
+}
+
+.bottom.pressed {
+    background-color: #B86C32;
 }
